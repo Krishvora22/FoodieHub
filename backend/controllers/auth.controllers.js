@@ -4,9 +4,9 @@ import genToken from "../utils/token.js";
 
 export const signUp = async(req , res)=>{
     try{
-        const {fullName , email , password , moblie , role} = req.body;
+        const {fullName , email , password , mobile , role} = req.body;
 
-        const user = await User.findOne({email})
+        let user = await User.findOne({email})
 
         if(user){
             return res.status(400).json({
@@ -20,9 +20,9 @@ export const signUp = async(req , res)=>{
             })
         }
 
-        if(moblie.length < 10){
+        if(mobile.length < 10){
             return res.status(400).json({
-                message : "Invalid moblie number"
+                message : "Invalid mobile number"
             })
         }
 
@@ -32,7 +32,7 @@ export const signUp = async(req , res)=>{
             fullName,
             email,
             password : hashPassword,
-            moblie,
+            mobile,
             role
         })
 
@@ -95,4 +95,19 @@ export const signIn = async(req , res)=>{
             message : "Sign In error" , error : error.message
         })
     }
+}
+
+export const signOut = async(req , res)=>{
+    try{
+        res.clearCookie("token");
+        return res.status(200).json({
+            message : "User signed out successfully"
+        })
+
+    } catch(error){
+        res.status(500).json({
+            message : "Sign Out error" , error : error.message
+        })
+    }
+
 }
